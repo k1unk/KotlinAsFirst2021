@@ -67,12 +67,11 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String {
-    return when {
-        (age != 111) && (age % 10 == 1) -> "$age год"
-        (age > 20) && (age % 10 in 2..4) -> "$age года"
+fun ageDescription(age: Int): String =
+    when {
+        age != 111 && age % 10 == 1 -> "$age год"
+        age % 100 !in 12..14 && age % 10 in 2..4 -> "$age года"
         else -> "$age лет"
-    }
 }
 
 /**
@@ -92,8 +91,8 @@ fun timeForHalfWay(
     val s2 = t1 * v1 + t2 * v2
     val s3 = t1 * v1 + t2 * v2 + t3 * v3
     return when {
-        ((halfS > s1) && (halfS <= s2)) -> t1 + (halfS - s1) / v2
-        ((halfS > s2) && (halfS <= s3)) -> t1 + t2 + (halfS - s2) / v3
+        halfS > s1 && halfS <= s2 -> t1 + (halfS - s1) / v2
+        halfS > s2 && halfS <= s3 -> t1 + t2 + (halfS - s2) / v3
         else -> halfS / v1
     }
 }
@@ -112,10 +111,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int): Int =
     when {
-        (((kingX == rookX1) || (kingY == rookY1)) && ((kingX != rookX2) && (kingY != rookY2))) -> {1}
-        (((kingX == rookX2) || (kingY == rookY2)) && ((kingX != rookX1) && (kingY != rookY1))) -> {2}
-        (((kingX == rookX1) || (kingX == rookX2)) && ((kingY == rookY1) || (kingY == rookY2))) -> {3}
-        else -> {0}
+        (kingX == rookX1 || kingX == rookX2) && (kingY == rookY1 || kingY == rookY2) -> 3
+        (kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1) -> 2
+        (kingX == rookX1 || kingY == rookY1) -> 1
+        else -> 0
     }
 
 
@@ -135,10 +134,10 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int): Int =
     when {
-        ((abs(kingX - bishopX) != abs(kingY - bishopY)) && ((kingX == rookX) || (kingY == rookY))) -> {1}
-        ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX != rookX) && (kingY != rookY))) -> {2}
-        ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX == rookX) || (kingY == rookY))) -> {3}
-        else -> {0}
+        abs(kingX - bishopX) == abs(kingY - bishopY) && (kingX == rookX || kingY == rookY) -> 3
+        abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
+        (kingX == rookX || kingY == rookY) -> 1
+        else -> 0
     }
 
 /**
@@ -153,12 +152,15 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val max1 = max(a, max(b, c))
     val min1 = min(a, min(b, c))
     val average = a + b + c - min1 - max1
-    return when {
-        max1 < min1 + average && max1.pow(2) < average.pow(2) + min1.pow(2) -> {0}
-        max1 < min1 + average && max1.pow(2) == average.pow(2) + min1.pow(2) -> {1}
-        max1 < min1 + average && max1.pow(2) > average.pow(2) + min1.pow(2) -> {2}
-        else -> {-1}
+    if (max1 < min1 + average) {
+        return when {
+            max1.pow(2) < average.pow(2) + min1.pow(2) -> 0
+            max1.pow(2) == average.pow(2) + min1.pow(2) -> 1
+            max1.pow(2) > average.pow(2) + min1.pow(2) -> 2
+            else -> -1
+        }
     }
+    return -1
 }
 
 /**
@@ -171,10 +173,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     when {
-        (b >= c) && (b <= d) && (a < c) -> b - c
-        (a <= d) && (d <= b) && (a > c) -> d - a
-        (b >= d) && (a <= c) -> d - c
-        (c < a) && (d > b) -> b - a
-        else -> {-1}
+        b in c..d && abs(a) <= abs(c) -> max(b, c) - min(b, c)
+        d in a..b && abs(a) >= abs(c) -> max(d, a) - min(d, a)
+        abs(b) >= abs(d) && abs(a) <= abs(c) -> max(d, c) - min(d, c)
+        abs(c) < abs(a) && abs(d) > abs(b) -> max(b, a) - min(b, a)
+        else -> -1
     }
-
