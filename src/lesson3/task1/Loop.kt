@@ -76,7 +76,7 @@ fun digitNumber(n: Int): Int {
     var count = 0
     var number = n
     if (number == 0) count = 1 else {
-        while (number > 0) {
+        while (number != 0) {
             number /= 10
             count++
         }
@@ -90,11 +90,17 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int =
-    when {
-        n <= 2 -> 1
-        else -> fib(n - 1) + fib(n - 2)
+fun fib(n: Int): Int {
+    var last2 = 0
+    var last1 = 1
+    var next = 1
+    for (i in 2..n) {
+        next = last2 + last1
+        last2 = last1
+        last1 = next
     }
+    return next
+}
 
 
 /**
@@ -104,14 +110,14 @@ fun fib(n: Int): Int =
  */
 
 fun minDivisor(n: Int): Int {
-    var min = n
-    for (i in 2..n / 2) {
-        if (n % i == 0) {
-            min = i
-            break
+    if (n % 2 == 0) return 2
+    else {
+        for (i in 3..n / 2) {
+            if (n % i == 0)
+                return i
         }
     }
-    return min
+    return n
 }
 
 
@@ -120,12 +126,11 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var max = 0
-    for (i in 1..n-1) {
-        if (n % i == 0) max = i
+fun maxDivisor(n: Int): Int{
+    for (i in n / 2 downTo 1) {
+        if (n % i == 0) return i
     }
-    return max
+    return n
 }
 
 /**
@@ -167,14 +172,17 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var count = 0
-    for (i in 2..m * n) {
-        if (i % n == 0 && i % m == 0) {
-            count = i
-            break
-        }
+    val nod = Nod(m, n)
+    return (m * n) / nod
+}
+fun Nod(n: Int, m: Int): Int {
+    var m1 = m
+    var n1 = n
+    while (m1 != n1) {
+        if (m1 > n1) m1 -= n1
+        else n1 -= m1
     }
-    return count
+    return m1
 }
 
 /**
@@ -186,9 +194,8 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     val min1 = min(n, m)
-    if (n < 2 || m < 2) return false
     if (n % 2 == 0 && m % 2 == 0) return false
-    if (n == m) return false
+    if (n == m && n * m > 1) return false
     for (i in 2..min1) {
         if (n % i == 0 && m % i == 0) return false
     }
@@ -228,8 +235,7 @@ fun isPalindrome(n: Int): Boolean {
         result = result * 10 + number % 10
         number /= 10
     }
-    if (n == result) return true
-    return false
+    return (n == result)
 }
 
 /**
@@ -242,14 +248,9 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var number = n
-    var count = 0
     val nLast = n % 10
     if (number < 10) return false
-    while (number != 0) {
-        number /= 10
-        count++
-    }
-    number = n
+    val count = digitNumber(n)
     for (i in 1..count) {
         val nNext = number % 10
         number /= 10
@@ -292,19 +293,13 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var countSquare = 0
-    var num = 0
     var kolNum = 0
     var result = 0
     for (i in 1..n) {
         var square = i * i
-        while (square > 0) {
-            square /= 10
-            countSquare++
-        }
-        square = i * i
+        val countSquare = digitNumber(square)
         for (j in countSquare downTo 1) {
-            num = ((square / 10.0.pow(j - 1)) % 10).toInt()
+            val num = ((square / 10.0.pow(j - 1)) % 10).toInt()
             square %= (10.0.pow(j - 1)).toInt()
             kolNum++
             if (kolNum == n) {
@@ -312,7 +307,6 @@ fun squareSequenceDigit(n: Int): Int {
                 break
             }
         }
-        countSquare = 0
     }
     return result
 }
@@ -328,19 +322,13 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var count = 0
     var result = 0
     var kolNum = 0
-    var num = 0
     for (i in 1..n) {
         var fibNum = fib(i)
-        while (fibNum > 0) {
-            fibNum /= 10
-            count++
-        }
-        fibNum = fib(i)
+        val count = digitNumber(fibNum)
         for (j in count downTo 1) {
-            num = ((fibNum / 10.0.pow(j - 1)) % 10).toInt()
+            val num = ((fibNum / 10.0.pow(j - 1)) % 10).toInt()
             fibNum %= (10.0.pow(j - 1)).toInt()
             kolNum++
             if (kolNum == n) {
@@ -348,7 +336,6 @@ fun fibSequenceDigit(n: Int): Int {
                 break
             }
         }
-        count = 0
     }
     return result
 }

@@ -69,7 +69,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String =
     when {
-        age != 111 && age % 10 == 1 -> "$age год"
+        age % 100 != 11 && age % 10 == 1 -> "$age год"
         age % 100 !in 12..14 && age % 10 in 2..4 -> "$age года"
         else -> "$age лет"
 }
@@ -112,7 +112,7 @@ fun whichRookThreatens(
     rookX2: Int, rookY2: Int): Int =
     when {
         (kingX == rookX1 || kingX == rookX2) && (kingY == rookY1 || kingY == rookY2) -> 3
-        (kingX == rookX2 || kingY == rookY2) && (kingX != rookX1 && kingY != rookY1) -> 2
+        (kingX == rookX2 || kingY == rookY2) -> 2
         (kingX == rookX1 || kingY == rookY1) -> 1
         else -> 0
     }
@@ -172,10 +172,4 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
-    when {
-        b in c..d && abs(a) <= abs(c) -> max(b, c) - min(b, c)
-        d in a..b && abs(a) >= abs(c) -> max(d, a) - min(d, a)
-        abs(b) >= abs(d) && abs(a) <= abs(c) -> max(d, c) - min(d, c)
-        abs(c) < abs(a) && abs(d) > abs(b) -> max(b, a) - min(b, a)
-        else -> -1
-    }
+    if (minOf(b, d) - maxOf(a, c) >= 0) minOf(b, d) - maxOf(a, c) else -1
