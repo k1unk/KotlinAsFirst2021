@@ -92,12 +92,11 @@ fun digitNumber(n: Int): Int {
  */
 fun fib(n: Int): Int {
     var last2 = 0
-    var last1 = 1
     var next = 1
     for (i in 2..n) {
+        val last1 = next
         next = last2 + last1
         last2 = last1
-        last1 = next
     }
     return next
 }
@@ -110,9 +109,10 @@ fun fib(n: Int): Int {
  */
 
 fun minDivisor(n: Int): Int {
+    val root = sqrt(n.toDouble()).toInt()
     if (n % 2 == 0) return 2
     else {
-        for (i in 3..n / 2) {
+        for (i in 3..root) {
             if (n % i == 0)
                 return i
         }
@@ -126,11 +126,15 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int{
-    for (i in n / 2 downTo 1) {
-        if (n % i == 0) return i
+fun maxDivisor(n: Int): Int {
+    val root = sqrt(n.toDouble()).toInt()
+    if (n % 2 == 0) return n / 2
+    else {
+        for (i in n / 3 downTo root) {
+            if (n % i == 0) return i
+        }
     }
-    return n
+    return 1
 }
 
 /**
@@ -172,10 +176,10 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    val nod = Nod(m, n)
+    val nod = nod(m, n)
     return (m * n) / nod
 }
-fun Nod(n: Int, m: Int): Int {
+fun nod(n: Int, m: Int): Int {
     var m1 = m
     var n1 = n
     while (m1 != n1) {
@@ -193,13 +197,8 @@ fun Nod(n: Int, m: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    val min1 = min(n, m)
-    if (n % 2 == 0 && m % 2 == 0) return false
-    if (n == m && n * m > 1) return false
-    for (i in 2..min1) {
-        if (n % i == 0 && m % i == 0) return false
-    }
-    return true
+    val k = nod(m, n)
+    return !(k > 1 && m * n > 1)
 }
 
 /**
@@ -229,13 +228,8 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    var number = n
-    var result = 0
-    while (number != 0) {
-        result = result * 10 + number % 10
-        number /= 10
-    }
-    return (n == result)
+    val newNum = revert(n)
+    return (n == newNum)
 }
 
 /**
@@ -254,8 +248,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     for (i in 1..count) {
         val nNext = number % 10
         number /= 10
-        if (nNext == nLast) continue
-        else return true
+        if (nNext != nLast) return true
     }
     return false
 }
@@ -294,22 +287,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  */
 fun squareSequenceDigit(n: Int): Int {
     var kolNum = 0
-    var result = 0
+    var square = 0
     for (i in 1..n) {
-        var square = i * i
-        val countSquare = digitNumber(square)
-        for (j in countSquare downTo 1) {
-            val num = ((square / 10.0.pow(j - 1)) % 10).toInt()
-            square %= (10.0.pow(j - 1)).toInt()
-            kolNum++
-            if (kolNum == n) {
-                result = num
-                break
-            }
-        }
+        square = i * i
+        kolNum += digitNumber(square)
+        if (kolNum >= n) break
     }
-    return result
+    return (square / (10.0.pow(kolNum - n).toInt()) % 10)
 }
+
 
 
 /**
@@ -321,21 +307,16 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+
 fun fibSequenceDigit(n: Int): Int {
-    var result = 0
     var kolNum = 0
+    var fibNum = 0
     for (i in 1..n) {
-        var fibNum = fib(i)
-        val count = digitNumber(fibNum)
-        for (j in count downTo 1) {
-            val num = ((fibNum / 10.0.pow(j - 1)) % 10).toInt()
-            fibNum %= (10.0.pow(j - 1)).toInt()
-            kolNum++
-            if (kolNum == n) {
-                result = num
-                break
-            }
-        }
+        fibNum = fib(i)
+        kolNum += digitNumber(fibNum)
+        if (kolNum >= n) break
     }
-    return result
+    return (fibNum / (10.0.pow(kolNum - n).toInt()) % 10)
 }
+
+
