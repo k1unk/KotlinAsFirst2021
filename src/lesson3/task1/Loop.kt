@@ -130,8 +130,8 @@ fun maxDivisor(n: Int): Int {
     val root = sqrt(n.toDouble()).toInt()
     if (n % 2 == 0) return n / 2
     else {
-        for (i in n / 3 downTo root) {
-            if (n % i == 0) return i
+        for (i in 2..root) {
+            if (n % i == 0) return n / i
         }
     }
     return 1
@@ -196,10 +196,7 @@ fun nod(n: Int, m: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val k = nod(m, n)
-    return !(k > 1 && m * n > 1)
-}
+fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 /**
  * Средняя (3 балла)
@@ -229,7 +226,7 @@ fun revert(n: Int): Int {
  */
 fun isPalindrome(n: Int): Boolean {
     val newNum = revert(n)
-    return (n == newNum)
+    return n == newNum
 }
 
 /**
@@ -293,7 +290,7 @@ fun squareSequenceDigit(n: Int): Int {
         kolNum += digitNumber(square)
         if (kolNum >= n) break
     }
-    return (square / (10.0.pow(kolNum - n).toInt()) % 10)
+    return square / 10.0.pow(kolNum - n).toInt() % 10
 }
 
 
@@ -316,7 +313,7 @@ fun fibSequenceDigit(n: Int): Int {
         kolNum += digitNumber(fibNum)
         if (kolNum >= n) break
     }
-    return (fibNum / (10.0.pow(kolNum - n).toInt()) % 10)
+    return fibNum / 10.0.pow(kolNum - n).toInt() % 10
 }
 
 
