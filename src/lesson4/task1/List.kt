@@ -177,10 +177,11 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     var sum = 0
     for (i in p.indices) {
-        sum += p[i] * (x).toDouble().pow(i).toInt()
+        sum += p[i] * power(x, i)
     }
     return sum
 }
+fun power(n: Int, i: Int): Int = n.toDouble().pow(i).toInt()
 
 /**
  * Средняя (3 балла)
@@ -271,6 +272,7 @@ fun convertToString(n: Int, base: Int): String {
     return newStr
 }
 
+
 /**
  * Средняя (3 балла)
  *
@@ -282,7 +284,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
     var sum = 0
     val newList = digits.reversed()
     for (i in newList.indices) {
-        sum += newList[i] * base.toDouble().pow(i).toInt()
+        sum += newList[i] * power(base, i)
     }
     return sum
 }
@@ -315,9 +317,11 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+
+val sym = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+val num = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+
 fun roman(n: Int): String {
-    val sym = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val num = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     var newStr = ""
     var new = n
     var i = 0
@@ -339,11 +343,14 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-val parameter2 = mutableListOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-val firstDec = mutableListOf<String>("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-val hd = mutableListOf<String>("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
-val dec = mutableListOf<String>("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-val parameter1 = mutableListOf<String>("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val parameter2 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val firstDec = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+    "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val hd = listOf("сто", "двести", "триста", "четыреста",
+    "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+val dec = listOf("двадцать", "тридцать", "сорок",
+    "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val parameter1 = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
 
 fun russian(n: Int): String {
     val half1 = n / 1000
@@ -363,7 +370,7 @@ fun russian(n: Int): String {
 
 fun count(half: Int, parameter: List<String>): List<String> {
     val middleResult = mutableListOf<String>()
-    val one = half % 10
+    val ones = half % 10
     val decades = half % 100 / 10
     if (half / 100 >= 1) {
         val hundreds = half / 100
@@ -371,27 +378,11 @@ fun count(half: Int, parameter: List<String>): List<String> {
     }
     when (decades) {
         1 -> middleResult += firstDec[half % 10]
-        0 -> if (one >= 1) middleResult += (parameter[one - 1])
+        0 -> if (ones >= 1) middleResult += (parameter[ones - 1])
         else -> {
             middleResult += (dec[decades - 2])
-            if (one >= 1) middleResult += (parameter[one - 1])
+            if (ones >= 1) middleResult += (parameter[ones - 1])
         }
     }
     return middleResult
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
