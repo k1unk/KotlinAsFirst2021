@@ -226,8 +226,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     for (i in list.indices) {
-        if (result.containsKey(list[i])) result[list[i]] = result[list[i]]!! + 1
-        else result[list[i]] = 1
+        result[list[i]] = result.getOrDefault(list[i], 0) + 1
     }
     return result.filterValues { it > 1 }
 }
@@ -245,15 +244,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    if (words.size <= 1) return false
-    val firstWord = order(words[0])
-    for (i in 1 until words.size) {
-        if (order(words[i]) == firstWord) return true
-    }
-    return false
+    if (words.size <= 1 || words.isEmpty()) return false
+    val sortedWords = words.map { order(it) }
+    return sortedWords.toSet().size != words.size
 }
 fun order(n: String): String = n.toCharArray().sorted().joinToString("")
-
 /**
  * Сложная (5 баллов)
  *
@@ -289,7 +284,6 @@ fun order(n: String): String = n.toCharArray().sorted().joinToString("")
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
-
 /**
  * Сложная (6 баллов)
  *
@@ -307,10 +301,18 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
+
+
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val result = mutableMapOf<Int, Int>()
+
     for (i in list.indices) {
-        if (number - list[i] in list && i != list.indexOf(number - list[i]))
-            return min(list.indexOf(number - list[i]), i) to max(list.indexOf(number - list[i]), i)
+        result[list[i]] = result.getOrDefault(list[i], 0) + 1
+    }
+    for ((key) in result) {
+        val secondKey = number - key
+        if (result[secondKey] in result && (key < secondKey || key == secondKey && result.getValue(key) > 1))
+            return Pair(key - 1, secondKey - 1)
     }
     return Pair(-1, -1)
 }
