@@ -71,6 +71,7 @@ class Tests {
     @Test
     @Tag("5")
     fun bestLongJump() {
+        assertEquals(-1, bestLongJump("706% -  %780"))
         assertEquals(717, bestLongJump("706 % - 717 - 703"))
         assertEquals(-1, bestLongJump("% - - % -"))
         assertEquals(754, bestLongJump("700 717 707 % 754"))
@@ -106,6 +107,7 @@ class Tests {
         assertEquals(-1, firstDuplicateIndex("Привет"))
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
+        assertEquals(0, firstDuplicateIndex("Мы мы пошли Прямо располагался магазин"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
     }
 

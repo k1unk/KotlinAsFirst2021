@@ -33,6 +33,8 @@ class Tests {
     @Test
     @Tag("2")
     fun daysInMonth() {
+        assertEquals(30, daysInMonth(4, 1300))
+        assertEquals(30, daysInMonth(4, 3797200))
         assertEquals(31, daysInMonth(1, 1990))
         assertEquals(28, daysInMonth(2, 1990))
         assertEquals(31, daysInMonth(3, 1990))

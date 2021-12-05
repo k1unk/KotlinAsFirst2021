@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson5.task1.hasAnagrams
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -102,7 +104,16 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var result = ""
+    for (i in phone.indices) {
+        if (phone[i] in "+123456789" && (phone.indexOf("+") == 0 || "+" !in phone)) {
+            result += phone[i].toString()
+        }
+    }
+    if (result.length >= 6) return result
+    return ""
+}
 
 /**
  * Средняя (5 баллов)
@@ -114,7 +125,17 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val results = jumps.split(Regex("""[\s\-%]"""))
+    var maxResult = -1
+    if (jumps.contains(Regex("""[^\d\s\-%)]""")) ||
+        jumps.contains(Regex("""([\-%])(-|%|\d)|(-|%|\d)([\-%])"""))) return -1
+
+    for (element in results)
+        if (element.isNotEmpty() && element.toInt() > maxResult)
+            maxResult = element.toInt()
+    return maxResult
+}
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +148,17 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val results = Regex(""" """).split(jumps)
+    var maxResult = -1
+    if (jumps.contains(Regex("""[^\d\s\-+%)]""")) ||
+        jumps.contains(Regex("""([\-+%])(\d)|(\d)([\-+%])"""))) return -1
+
+    for (i in results.indices step 2)
+        if (results[i + 1] == "+" && results[i].toInt() > maxResult)
+            maxResult = results[i].toInt()
+    return maxResult
+}
 
 /**
  * Сложная (6 баллов)
@@ -138,7 +169,22 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+
+fun plusMinus(expression: String): Int {
+    if (!"$expression + ".matches(Regex("""(\d+ [+-] )+"""))) {
+        throw IllegalArgumentException(expression)
+    }
+    val currentExp = Regex(""" """).split(expression)
+    var first = currentExp[0].toInt()
+    var result = 0
+    for (i in 2 until currentExp.size step 2) {
+        result = if (currentExp[i - 1] == "+") currentExp[i].toInt() + first
+        else first - currentExp[i].toInt()
+        first = result
+    }
+    return result
+
+}
 
 /**
  * Сложная (6 баллов)
@@ -149,7 +195,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val list = Regex(""" """).split(str)
+    var count = 0
+    if (list.size <= 1) return -1
+    if (list[0].equals(list[1], ignoreCase = true)) return 0
+    for (i in 1 until list.size) {
+        count += list[i - 1].length + 1
+        if (list[i].equals(list[i + 1], ignoreCase = true)) return count
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
