@@ -58,6 +58,7 @@ class Tests {
     @Test
     @Tag("4")
     fun flattenPhoneNumber() {
+        assertEquals("", flattenPhoneNumber("aaaaaaaaaaaaaaaa8a4aaa567aaaaaaa6aaaaaa"))
         assertEquals("+79211234567", flattenPhoneNumber("+7 (921) 123-45-67"))
         assertEquals("123456798", flattenPhoneNumber("12 --  34- 5 -- 67 -98"))
         assertEquals("+12345", flattenPhoneNumber("+12 (3) 4-5"))
@@ -90,6 +91,7 @@ class Tests {
     @Test
     @Tag("6")
     fun plusMinus() {
+        assertEquals(1, plusMinus("1"))
         assertEquals(0, plusMinus("0"))
         assertEquals(4, plusMinus("2 + 2"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
@@ -104,6 +106,7 @@ class Tests {
     @Test
     @Tag("6")
     fun firstDuplicateIndex() {
+        assertEquals(-1, firstDuplicateIndex("a u a"))
         assertEquals(-1, firstDuplicateIndex("Привет"))
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))

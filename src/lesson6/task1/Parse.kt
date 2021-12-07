@@ -2,7 +2,6 @@
 
 package lesson6.task1
 
-import lesson5.task1.hasAnagrams
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -105,11 +104,11 @@ fun dateDigitToStr(digital: String): String = TODO()
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
+    if (phone.contains(Regex("""([^\d\s\-()+])"""))) return ""
     var result = ""
     for (i in phone.indices) {
-        if (phone[i] in "+123456789" && (phone.indexOf("+") == 0 || "+" !in phone)) {
+        if (phone[i] in "+0123456789" && (phone.indexOf("+") == 0 || "+" !in phone))
             result += phone[i].toString()
-        }
     }
     if (result.length >= 6) return result
     return ""
@@ -175,12 +174,10 @@ fun plusMinus(expression: String): Int {
         throw IllegalArgumentException(expression)
     }
     val currentExp = Regex(""" """).split(expression)
-    var first = currentExp[0].toInt()
-    var result = 0
+    var result = currentExp[0].toInt()
     for (i in 2 until currentExp.size step 2) {
-        result = if (currentExp[i - 1] == "+") currentExp[i].toInt() + first
-        else first - currentExp[i].toInt()
-        first = result
+        if (currentExp[i - 1] == "+") result += currentExp[i].toInt()
+        else result -= currentExp[i].toInt()
     }
     return result
 
@@ -200,7 +197,7 @@ fun firstDuplicateIndex(str: String): Int {
     var count = 0
     if (list.size <= 1) return -1
     if (list[0].equals(list[1], ignoreCase = true)) return 0
-    for (i in 1 until list.size) {
+    for (i in 1 until list.size - 1) {
         count += list[i - 1].length + 1
         if (list[i].equals(list[i + 1], ignoreCase = true)) return count
     }
