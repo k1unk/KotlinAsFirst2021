@@ -175,36 +175,31 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var max = 0
     for (line in File(inputName).readLines()) {
-        val splLine = Regex("""" +""").replace(line, " ")
+        val splLine = line.replace(" +".toRegex(), " ")
         if (splLine.trim().length > max)
             max = splLine.trim().length
     }
 
     for (line in File(inputName).readLines()) {
-        val splLine = Regex("""" +""").replace(line, " ")
+        val splLine = line.replace(" +".toRegex(), " ")
         val list = Regex("""\s""").split(splLine.trim()).toMutableList()
-        when {
-            (list.size == 1) -> {
-                writer.write(splLine.trim())
-                writer.newLine()
+        if (list.size == 1) {
+            writer.write(splLine.trim())
+            writer.newLine()
+        } else if (line.isNotBlank()) {
+            var currentLength = max - splLine.trim().length
+            var i = 0
+            while (currentLength > 0) {
+                list[i] += " "
+                if (i < list.size - 2)
+                    i += 1
+                else
+                    i = 0
+                currentLength -= 1
             }
-            (line.isNotEmpty()) -> {
-                var currentLength = max - splLine.trim().length
-                var i = 0
-                while (currentLength > 0) {
-                    list[i] += " "
-                    if (i < list.size - 2)
-                        i += 1
-                    else
-                        i = 0
-                    currentLength -= 1
-                }
-                writer.write(list.joinToString(" "))
-                writer.newLine()
-            }
-            else -> writer.newLine()
-        }
-
+            writer.write(list.joinToString(" "))
+            writer.newLine()
+        } else writer.newLine()
     }
     writer.close()
 }
